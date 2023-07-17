@@ -1,0 +1,753 @@
+openapi: 3.0.0
+info:
+  version: 0.0.1
+  title: Pirani REST Integration API for AML
+  description: |-
+    AML (Anti-Money Laundering) is based on three basic entities `CLIENTS`, `COUNTERPARTIES`, `PRODUCTS` and `TRANSACTIONS`. Each entity has parameterizable fields, some are created by default. The user can create new fields, this can be done in the field parameterization section of the PiraniRisk AML module. The following endpoints allow the visualization of the parameterized fields and the administration of records in each of the entities (create, edit)
+    
+    There are some preconfigured essential fields that are required. Depending on the type of entity, the required fields are:
+    
+    ### CLIENTS
+      * `identificationType`
+      * `identificationNumber`
+      * `personType`
+      * `firstName`
+      * `firstLastName`
+      * `bomCountry`
+      * `bomCity`
+      * `sex`
+      * `economicActivity`
+      * `registrationDate`
+      * `state`
+      * `businessName`
+      * `updateAt`
+    
+    ### COUNTERPARTIES
+      * `identificationType`
+      * `identificationNumber`
+      * `counterpartyType`
+      * `creationDate`
+      * `state`
+      * `firstName`
+      * `firstLastName`
+      * `businessName`
+      * `personType`
+    
+    ### PRODUCTS
+      * `product`
+      * `subproduct`
+      * `productState`
+      * `productNumber`
+      * `registrationDate`
+      * `city`
+      * `branchOffice`
+      * `distributionChannel`
+      * `identificationType` *[__Client__|__Counterparty__] owner*
+      * `identificationNumber` *[__Client__|__Counterparty__] owner*
+    
+    ### TRANSACTIONS
+      * `transactionCode`
+      * `productNumber` *__Product__ owner*
+      * `distributionOrReceptionChannel`
+      * `branchOffice`
+      * `city`
+      * `nature`
+      * `transactionDate`
+      * `operationValue`
+      * `cashValue`
+      * `checkValue`
+      * `electronicChannelValue`
+      * `currencyType`
+      * `country`
+      * `city`
+tags:
+  - name: Parametrized Fields
+  - name: Entity Management
+paths:
+  /template/{entityType}:
+    get:
+      tags:
+        - Parametrized Fields
+      description: |-
+        Returns a list of all parameterized fields including their detailed description.
+      parameters:
+        - $ref: "#/components/parameters/entityTypeParam"
+      responses:
+        "200":
+          description: Request processed successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+              examples:
+                parametrizedFields:
+                  $ref: "#/components/examples/parametrizedFieldsResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+              example:
+                timestamp: "2023-06-26T21:32:26.196+00:00"
+                path: "/api/rest/v1/rest-integration-api/organization/0000002079/template/CLIENTS"
+                status: 500
+                error: "Internal Server Error"
+        "401":
+          description: Unauthorized
+  /entity/{entityType}:
+    post:
+      tags:
+        - Entity Management
+      description: |-
+        Creates a new record based on the type of entity provided. The request body is of type `object`, and its attributes can vary depending on the fields parameterized in AML. All the attributes must be set as `string`, their conversion is done internally according to the type defined in the field parameterization.
+        
+        Note that in addition to the essential fields, each organization can have its additional fields.
+      parameters:
+        - $ref: "#/components/parameters/entityTypeParam"
+      requestBody:
+        description: "Request body type `object`"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Client"
+            examples:
+              newClient:
+                $ref: "#/components/examples/newClient"
+              newCounterparty:
+                $ref: "#/components/examples/newCounterparty"
+              newProduct:
+                $ref: "#/components/examples/newProduct"
+              newTransaction:
+                $ref: "#/components/examples/newTransaction"
+      responses:
+        "200":
+          description: Request processed successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+              examples:
+                insertOk:
+                  summary: Successfully registered
+                  value:
+                    sucess: true
+                    message: "entity inserted successfully!"
+                    data: null
+                    errors: [ ]
+                validationError:
+                  summary: Validation error
+                  value:
+                    sucess: false
+                    message: "validation errors occurred"
+                    data: null
+                    errors:
+                      - code: "FIELD_REQUIRED"
+                        messages:
+                          - "code: [identificationNumber], label: [Número de Identificación], type: [STRING]"
+                          - "code: [personType], label: [Tipo Persona], type: [LIST]"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+              example:
+                timestamp: "2023-06-26T21:32:26.196+00:00"
+                path: "/api/rest/v1/rest-integration-api/organization/0000002079/entity/PRODUCTS"
+                status: 500
+                error: "Internal Server Error"
+        "401":
+          description: Unauthorized
+    put:
+      tags:
+        - Entity Management
+      description: |-
+        Updates the fields of an entity indicated in the request body. There are some fields that are not updateable, such as the associated parent entity reference keys. The primary key is required only for find the register. The following fields are not updateable:
+        
+        ### PRODUCTS
+          * `identificationType`
+          * `identificationNumber`
+        
+        ### TRANSACTIONS
+          * `productNumber`
+
+      parameters:
+        - $ref: "#/components/parameters/entityTypeParam"
+      requestBody:
+        description: "Request body type `object`"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Client"
+            examples:
+              updateClient:
+                $ref: "#/components/examples/updateClient"
+              updateCounterparty:
+                $ref: "#/components/examples/updateCounterparty"
+              updateProduct:
+                $ref: "#/components/examples/updateProduct"
+              updateTransaction:
+                $ref: "#/components/examples/updateTransaction"
+      responses:
+        "200":
+          description: Request processed successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+              examples:
+                insertOk:
+                  summary: Successfully registered
+                  value:
+                    sucess: true
+                    message: "entity inserted successfully!"
+                    data: null
+                    errors: [ ]
+                validationError:
+                  summary: Validation error
+                  value:
+                    sucess: false
+                    message: "validation errors occurred"
+                    data: null
+                    errors:
+                      - code: "FIELD_REQUIRED"
+                        messages:
+                          - "code: [identificationNumber], label: [Número de Identificación], type: [STRING]"
+                          - "code: [personType], label: [Tipo Persona], type: [LIST]"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+              example:
+                timestamp: "2023-06-26T21:32:26.196+00:00"
+                path: "/api/rest/v1/rest-integration-api/organization/0000002079/entity/PRODUCTS"
+                status: 500
+                error: "Internal Server Error"
+        "401":
+          description: Unauthorized
+components:
+  parameters:
+    entityTypeParam:
+      name: entityType
+      description: |-
+        AML's entity type
+      in: path
+      required: true
+      schema:
+        type: string
+        enum:
+          - CLIENTS
+          - COUNTERPARTIES
+          - PRODUCTS
+          - TRANSACTIONS
+  schemas:
+    InternalServerError:
+      type: object
+      properties:
+        timestamp:
+          type: string
+        path:
+          type: string
+        status:
+          type: number
+        error:
+          type: string
+    GenericResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          type: object
+          nullable: true
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              code:
+                type: string
+                enum:
+                  - ENTITY_NOT_ALLOWED
+                  - FIELD_REQUIRED
+                  - FIELD_LENGTH
+                  - FIELD_DATA_TYPE
+                  - ALREADY_EXISTS
+                  - DOES_NOT_EXIST
+                  - PARENT_NOT_FOUND
+              messages:
+                type: array
+                items:
+                  type: string
+    Client:
+      type: object
+      properties:
+        identificationType:
+          type: string
+        identificationNumber:
+          type: string
+        personType:
+          type: string
+        firstName:
+          type: string
+        firstLastName:
+          type: string
+        bomCountry:
+          type: string
+        bomCity:
+          type: string
+        sex:
+          type: string
+        economicActivity:
+          type: string
+        registrationDate:
+          type: string
+        state:
+          type: string
+        businessName:
+          type: string
+        updateAt:
+          type: string
+      required:
+        - identificationType
+        - identificationNumber
+        - personType
+        - firstName
+        - firstLastName
+        - bomCountry
+        - bomCity
+        - sex
+        - economicActivity
+        - registrationDate
+        - state
+        - businessName
+        - updateAt
+    Counterparty:
+      type: object
+      properties:
+        identificationType:
+          type: string
+        identificationNumber:
+          type: string
+        counterpartyType:
+          type: string
+        creationDate:
+          type: string
+        state:
+          type: string
+        firstName:
+          type: string
+        firstLastName:
+          type: string
+        businessName:
+          type: string
+        personType:
+          type: string
+      required:
+        - identificationType
+        - identificationNumber
+        - counterpartyType
+        - creationDate
+        - state
+        - firstName
+        - firstLastName
+        - businessName
+        - personType
+    Product:
+      type: object
+      properties:
+        product:
+          type: string
+        subproduct:
+          type: string
+        productState:
+          type: string
+        productNumber:
+          type: string
+        registrationDate:
+          type: string
+        city:
+          type: string
+        branchOffice:
+          type: string
+        distributionChannel:
+          type: string
+        identificationType:
+          type: string
+        identificationNumber:
+          type: string
+      required:
+        - product
+        - subproduct
+        - productState
+        - productNumber
+        - registrationDate
+        - city
+        - branchOffice
+        - distributionChannel
+        - identificationType
+        - identificationNumber
+    Transaction:
+      type: object
+      properties:
+        transactionCode:
+          type: string
+        productNumber:
+          type: string
+        distributionOrReceptionChannel:
+          type: string
+        branchOffice:
+          type: string
+        city:
+          type: string
+        country:
+          type: string
+        nature:
+          type: string
+        transactionDate:
+          type: string
+        operationValue:
+          type: string
+        cashValue:
+          type: string
+        checkValue:
+          type: string
+        electronicChannelValue:
+          type: string
+        currencyType:
+          type: string
+      required:
+        - transactionCode
+        - productNumber
+        - distributionOrReceptionChannel
+        - branchOffice
+        - city
+        - country
+        - nature
+        - transactionDate
+        - operationValue
+        - cashValue
+        - checkValue
+        - electronicChannelValue
+        - currencyType
+  examples:
+    newClient:
+      summary: "New Client"
+      value:
+        identificationType: "DNI"
+        identificationNumber: "1"
+        personType: "NATURAL"
+        firstName: "Elver"
+        firstLastName: "Gonzalez"
+        bomCountry: "COL"
+        bomCity: "BOG"
+        sex: "M"
+        economicActivity: "Comercio"
+        registrationDate: "2023-06-26T14:30:31"
+        state: "ACTIVE"
+        businessName: "Salchicha Rica"
+        updateAt: "2023-06-30T10:39:03"
+    updateClient:
+      summary: "Update Client"
+      value:
+        identificationType: "DNI"
+        identificationNumber: "1"
+        personType: "NATURAL"
+        firstName: "Elver"
+        firstLastName: "Gonzalez"
+        bomCountry: "COL"
+        bomCity: "BOG"
+        sex: "M"
+        economicActivity: "Comercio"
+        registrationDate: "2023-06-26T14:30:31"
+        state: "ACTIVE"
+        businessName: "Salchicha Rica"
+    newCounterparty:
+      summary: "New Counterparty"
+      value:
+        identificationType: ""
+        identificationNumber: ""
+        counterpartyType: ""
+        creationDate: ""
+        state: ""
+        firstName: ""
+        firstLastName: ""
+        businessName: ""
+        personType: ""
+    updateCounterparty:
+      summary: "Update Counterparty"
+      value:
+        identificationType: ""
+        identificationNumber: ""
+        counterpartyType: ""
+        creationDate: ""
+        state: ""
+        firstName: ""
+        firstLastName: ""
+        businessName: ""
+        personType: ""
+    newProduct:
+      summary: "New Product"
+      value:
+        product: ""
+        subproduct: ""
+        productState: ""
+        productNumber: ""
+        registrationDate: ""
+        city: ""
+        branchOffice: ""
+        distributionChannel: ""
+        identificationType: ""
+        identificationNumber: ""
+    updateProduct:
+      summary: "Update Product"
+      value:
+        product: ""
+        subproduct: ""
+        productState: ""
+        productNumber: ""
+        registrationDate: ""
+        city: ""
+        branchOffice: ""
+        distributionChannel: ""
+    newTransaction:
+      summary: "New Transaction"
+      value:
+        transactionCode: ""
+        productNumber: ""
+        distributionOrReceptionChannel: ""
+        branchOffice: ""
+        city: ""
+        country: ""
+        nature: ""
+        transactionDate: ""
+        operationValue: ""
+        cashValue: ""
+        checkValue: ""
+        electronicChannelValue: ""
+        currencyType: ""
+    updateTransaction:
+      summary: "Update Transaction"
+      value:
+        transactionCode: ""
+        distributionOrReceptionChannel: ""
+        branchOffice: ""
+        city: ""
+        country: ""
+        nature: ""
+        transactionDate: ""
+        operationValue: ""
+        cashValue: ""
+        checkValue: ""
+        electronicChannelValue: ""
+        currencyType: ""
+    parametrizedFieldsResponse:
+      summary: "Parametrized fields"
+      value:
+        success: true
+        message: "Request processed successfully"
+        data:
+          fields:
+            - code: identificationType
+              label: Tipo Identificación
+              dataType: LIST
+              options:
+                - code: '1'
+                  value: DNI
+                - code: '2'
+                  value: Documento de extranjeria
+                - code: '3'
+                  value: Pasaporte
+                - code: '4'
+                  value: NIT
+                - code: '5'
+                  value: RUT
+            - code: identificationNumber
+              label: Número de Identificación
+              dataType: STRING
+            - code: personType
+              label: Tipo Persona
+              dataType: LIST
+              options:
+                - code: '1'
+                  value: Natural
+                - code: '2'
+                  value: Jurídica
+            - code: firstName
+              label: Primer Nombre
+              dataType: STRING
+            - code: secondName
+              label: Segundo Nombre
+              dataType: STRING
+            - code: firstLastName
+              label: Primer Apellido
+              dataType: STRING
+            - code: secondLastName
+              label: Segundo Apellido
+              dataType: STRING
+            - code: businessName
+              label: Razón Social
+              dataType: STRING
+            - code: bornDate
+              label: Fecha de Nacimiento
+              dataType: DATE
+            - code: constitutionDate
+              label: Fecha constitución empresa
+              dataType: DATE
+            - code: bornCountry
+              label: Pais Nacimiento
+              dataType: LIST
+              options:
+                - code: default
+                  value: Genérico
+            - code: bornCity
+              label: Ciudad de Nacimiento
+              dataType: LIST
+              options:
+                - code: default
+                  value: Genérico
+            - code: sex
+              label: Sexo
+              dataType: LIST
+              options:
+                - code: '1'
+                  value: Masculino
+                - code: '2'
+                  value: Femenino
+                - code: '3'
+                  value: N/A
+            - code: occupation
+              label: Ocupación
+              dataType: LIST
+              options:
+                - code: default
+                  value: Genérico
+            - code: politicallyExposed
+              label: Politicamente Expuesto
+              dataType: LIST
+              options:
+                - code: '1'
+                  value: Si
+                - code: '2'
+                  value: 'No'
+            - code: economicActivity
+              label: Actividad Económica
+              dataType: LIST
+              options:
+                - code: default
+                  value: Genérico
+            - code: registrationDate
+              label: Fecha de Alta
+              dataType: DATE
+            - code: updateAt
+              label: Fecha de Actualización
+              dataType: DATE
+            - code: personalAddress
+              label: Dirección
+              dataType: STRING
+            - code: personalAddressCountry
+              label: Pais Dirección
+              dataType: LIST
+              options:
+                - code: default
+                  value: Genérico
+            - code: personalAddressCity
+              label: Ciudad Dirección
+              dataType: LIST
+              options:
+                - code: default
+                  value: Genérico
+            - code: workAddress
+              label: Dirección Laboral
+              dataType: STRING
+            - code: workAddressCountry
+              label: Pais Dirección Laboral
+              dataType: LIST
+              options:
+                - code: default
+                  value: Genérico
+            - code: workAddressCity
+              label: Ciudad Dirección Laboral
+              dataType: LIST
+              options:
+                - code: default
+                  value: Genérico
+            - code: contactPhone
+              label: Telefono de contacto
+              dataType: STRING
+            - code: contactEmail
+              label: Dirección Email
+              dataType: STRING
+            - code: businessAddress
+              label: Dirección de la empresa
+              dataType: STRING
+            - code: businessAddressCountry
+              label: País de dirección empresa
+              dataType: LIST
+              options:
+                - code: default
+                  value: Genérico
+            - code: businessAddressCity
+              label: Ciudad de dirección empresa
+              dataType: LIST
+              options:
+                - code: default
+                  value: Genérico
+            - code: businessContactPhone
+              label: Teléfono de contacto
+              dataType: STRING
+            - code: businessContactEmail
+              label: Correo electrónico
+              dataType: STRING
+            - code: bondingCenter
+              label: Canal de Vinculación
+              dataType: LIST
+              options:
+                - code: default
+                  value: Genérico
+            - code: bondingMedium
+              label: Medio de Vinculación
+              dataType: LIST
+              options:
+                - code: default
+                  value: Genérico
+            - code: state
+              label: Estado
+              dataType: LIST
+              options:
+                - code: '1'
+                  value: Activo
+                - code: '2'
+                  value: Inactivo
+            - code: income
+              label: Ingresos
+              dataType: NUMERIC
+            - code: otherIncome
+              label: Otros Ingresos.
+              dataType: NUMERIC
+            - code: totalIncome
+              label: Total Ingresos
+              dataType: NUMERIC
+            - code: passives
+              label: Pasivos
+              dataType: NUMERIC
+            - code: assets
+              label: Activos
+              dataType: NUMERIC
+            - code: accountingEquity
+              label: Patrimonio
+              dataType: NUMERIC
+            - code: monthlySales
+              label: Ventas Mensuales
+              dataType: NUMERIC
+            - code: annualSales
+              label: Ventas Anuales
+              dataType: NUMERIC
+        errors: [ ]

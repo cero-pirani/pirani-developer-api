@@ -1,1 +1,1 @@
-# pirani-developer-api
+# PIRANI documentation repository
