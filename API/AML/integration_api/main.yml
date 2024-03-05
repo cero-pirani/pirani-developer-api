@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  version: 0.0.1
+  version: 1.0.0
   title: Pirani REST Integration API for AML
   description: |-
     AML (Anti-Money Laundering) is based on three basic entities `CLIENTS`, `COUNTERPARTIES`, `PRODUCTS` and `TRANSACTIONS`. Each entity has parameterizable fields, some are created by default. The user can create new fields, this can be done in the field parameterization section of the PiraniRisk AML module. The following endpoints allow the visualization of the parameterized fields and the administration of records in each of the entities (create, edit)
