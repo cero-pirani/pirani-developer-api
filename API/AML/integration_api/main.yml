@@ -444,7 +444,7 @@ components:
         identificationType: "DNI"
         identificationNumber: "1"
         personType: "NATURAL"
-        firstName: "Elver"
+        firstName: "Juan"
         firstLastName: "Gonzalez"
         bomCountry: "COL"
         bomCity: "BOG"
@@ -452,7 +452,7 @@ components:
         economicActivity: "Comercio"
         registrationDate: "2023-06-26T14:30:31"
         state: "ACTIVE"
-        businessName: "Salchicha Rica"
+        businessName: "Papas fritas"
         updateAt: "2023-06-30T10:39:03"
     updateClient:
       summary: "Update Client"
@@ -460,7 +460,7 @@ components:
         identificationType: "DNI"
         identificationNumber: "1"
         personType: "NATURAL"
-        firstName: "Elver"
+        firstName: "Juan"
         firstLastName: "Gonzalez"
         bomCountry: "COL"
         bomCity: "BOG"
@@ -468,7 +468,7 @@ components:
         economicActivity: "Comercio"
         registrationDate: "2023-06-26T14:30:31"
         state: "ACTIVE"
-        businessName: "Salchicha Rica"
+        businessName: "Papas fritas"
     newCounterparty:
       summary: "New Counterparty"
       value:
