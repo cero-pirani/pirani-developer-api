@@ -1,13 +1,168 @@
 openapi: 3.0.0
 info:
   version: 1.0.0
-  title: Pirani REST Integration API for AML
-  description: |-
-    AML (Anti-Money Laundering) is based on three basic entities `CLIENTS`, `COUNTERPARTIES`, `PRODUCTS` and `TRANSACTIONS`. Each entity has parameterizable fields, some are created by default. The user can create new fields, this can be done in the field parameterization section of the PiraniRisk AML module. The following endpoints allow the visualization of the parameterized fields and the administration of records in each of the entities (create, edit)
-    
-    There are some preconfigured essential fields that are required. Depending on the type of entity, the required fields are:
-    
-    ### CLIENTS
+  title: APIS documentation
+x-tagGroups:
+  - name: Risk Management
+    tags:
+      - Event management
+  - name: AML Suite
+    tags:
+      - Pirani REST Integration API for AML
+      - Parametrized Fields
+      - Entity Management
+tags:
+  - name: Event management
+    description: |-
+      In this document, you will find all the necessary information to consume the Event Pirani API services. Remember that you must be a registered user on Pirani to access this service; if you are not, we invite you to register.
+
+      This option is only available for Pro plans and requires the necessary permissions to use this service. If you do not have these permissions, please contact your account administrator.
+
+      This API allows for the creation of events and incidents; all successful registration actions via the API will automatically appear in your events or incidents module as appropriate. When conducting tests, remember that these records will be published directly to your account and will consume records from your plan. These can be edited or deleted from the corresponding module via the graphical interface. The service consumption is protected through basic authentication using the Access Token, which is unique to your organization, and it is your responsibility not to distribute your unique access key for the use of this service.
+
+      <h2>Bug list</h2>
+
+      If you have any questions about the implementation process, you can write to us through the 
+      
+      <a href="https://help.piranirisk.com/en" style="color: #32805b; text-decoration: underline">Help center</a>
+
+      <table>
+        <thead>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2;">
+            <th style="border:none; padding: 5px 25px 5px 0; color: #A9A9A9; font-weight:normal">CODE</th>
+            <th style="border:none; padding: 5px; color: #A9A9A9; font-weight:normal; width: 100%">REPLY MESSAGE: DESCRIPTION</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">P001</td>
+            <td style="border:none; padding: 10px;">The request is missing the X-PIRANI-APIKEY Header value</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">P002</td>
+            <td style="border:none; padding: 10px;">API Key invalid format, the correct format is PN.yyyyy.xxxxxxxxxxxx</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">P003</td>
+            <td style="border:none; padding: 10px;">Invalid API Key</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">P004</td>
+            <td style="border:none; padding: 10px;">Field required</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">P005</td>
+            <td style="border:none; padding: 10px;">Max length is $(max) characters</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">P006</td>
+            <td style="border:none; padding: 10px;">Min length is $(min) characters</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">P007</td>
+            <td style="border:none; padding: 10px;">Max value is $(max)</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">P008</td>
+            <td style="border:none; padding: 10px;">Min value is $(min)</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">P009</td>
+            <td style="border:none; padding: 10px;">Invalid date time format, the valid format is yyyy-MM-ddTHH:mm:ss. Example: 2022-10-05T10:00:00</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">P010</td>
+            <td style="border:none; padding: 10px;">Incorrect management system, the valid modules are ORM, ISMS, AML, COMP</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">P011</td>
+            <td style="border:none; padding: 10px;">Your plan doesn't have access to the management system</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">P012</td>
+            <td style="border:none; padding: 10px;">Resource is not associated with the management system</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">P013</td>
+            <td style="border:none; padding: 10px;">Invalid email format</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">P014</td>
+            <td style="border:none; padding: 10px;">Invalid value, the valid values are true or false</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">P015</td>
+            <td style="border:none; padding: 10px;">User not found in organization</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">P016</td>
+            <td style="border:none; padding: 10px;">API Key rate limit exceeded</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">DF01</td>
+            <td style="border:none; padding: 10px;">Dynamic field required</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">DF02</td>
+            <td style="border:none; padding: 10px;">Dynamic field not found</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">DF03</td>
+            <td style="border:none; padding: 10px;">Dynamic field value required</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">DF04</td>
+            <td style="border:none; padding: 10px;">Dynamic field max length reached</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">DF05</td>
+            <td style="border:none; padding: 10px;">Dynamic field numeric value invalid</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">DF06</td>
+            <td style="border:none; padding: 10px;">Dynamic field date format invalid. Valid yyyy-MM-ddTHH:mm:ss</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">DF07</td>
+            <td style="border:none; padding: 10px;">Dynamic field options list required</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">DF08</td>
+            <td style="border:none; padding: 10px;">Dynamic field options list value required</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">DF09</td>
+            <td style="border:none; padding: 10px;">Dynamic field options list value not found</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">DF010</td>
+            <td style="border:none; padding: 10px;">Max length reach for dynamic field options list value</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">DF011</td>
+            <td style="border:none; padding: 10px;">Dynamic field options list code required</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">DF012</td>
+            <td style="border:none; padding: 10px;">Dynamic field options list code not found</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">EVT001</td>
+            <td style="border:none; padding: 10px;">Invalid date, the date cannot be greater than today</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">EVT002</td>
+            <td style="border:none; padding: 10px;">Invalid date, the start date cannot be greater than the discovery date</td>
+          </tr>
+        </tbody>
+      </table>
+  - name: Pirani REST Integration API for AML
+    description: |-
+      AML (Anti-Money Laundering) is based on three basic entities `CLIENTS`, `COUNTERPARTIES`, `PRODUCTS` and `TRANSACTIONS`. Each entity has parameterizable fields, some are created by default. The user can create new fields, this can be done in the field parameterization section of the PiraniRisk AML module. The following endpoints allow the visualization of the parameterized fields and the administration of records in each of the entities (create, edit)
+
+      There are some preconfigured essential fields that are required. Depending on the type of entity, the required fields are:  
+
+      ### CLIENTS
       * `identificationType`
       * `identificationNumber`
       * `personType`
@@ -21,8 +176,8 @@ info:
       * `state`
       * `businessName`
       * `updateAt`
-    
-    ### COUNTERPARTIES
+
+      ### COUNTERPARTIES
       * `identificationType`
       * `identificationNumber`
       * `counterpartyType`
@@ -32,8 +187,8 @@ info:
       * `firstLastName`
       * `businessName`
       * `personType`
-    
-    ### PRODUCTS
+
+      ### PRODUCTS
       * `product`
       * `subproduct`
       * `productState`
@@ -44,8 +199,8 @@ info:
       * `distributionChannel`
       * `identificationType` *[__Client__|__Counterparty__] owner*
       * `identificationNumber` *[__Client__|__Counterparty__] owner*
-    
-    ### TRANSACTIONS
+
+      ### TRANSACTIONS
       * `transactionCode`
       * `productNumber` *__Product__ owner*
       * `distributionOrReceptionChannel`
@@ -60,14 +215,81 @@ info:
       * `currencyType`
       * `country`
       * `city`
-tags:
   - name: Parametrized Fields
   - name: Entity Management
 paths:
+  /dev/services/events:
+    post:
+      security: []
+      tags:
+        - Event management
+      summary: Create event
+      description: |-
+        With this endpoint, you can create an event in your application.
+
+        <table>
+          <thead>
+            <tr style="border:none; border-bottom: 1px solid #C2C2C2;">
+              <th style="border:none; padding: 10px 25px 10px 0; color: #A9A9A9; font-weight:normal; width: 50vw">HEADERS</th>
+              <th style="border:none; padding: 10px; color: #A9A9A9; font-weight:normal; width: 50vw">VALUE</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+              <td style="border:none; padding: 10px 25px 10px 0;">Content-Type</td>
+              <td style="border:none; padding: 10px;">application/json</td>
+            </tr>
+            <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+              <td style="border:none; padding: 10px 25px 10px 0;">X-PIRANI-APIKEY</td>
+              <td style="border:none; padding: 10px;">${APIKEY}</td>
+            </tr>
+          </tbody>
+        </table>
+      requestBody:
+        description: "Request body type `object`"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateEvent"
+            examples:
+              newEvent:
+                $ref: "#/components/examples/newEvent"
+              curlExample:
+                $ref: "#/components/examples/newEventCurl"
+      responses:
+        "201":
+          description: Request processed successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateEventSuccess"
+              example:
+                body:
+                  data: "Event created successfully"
+                  successful: true
+                status: 201
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateEventError"
+              example: 
+                body:
+                  data:
+                    status: 400
+                    errorInfo:
+                      - error: "Field required"
+                        errorCode: "P004"
+                  successful: false
+                status: 400 
   /template/{entityType}:
     get:
+      security: []
       tags:
         - Parametrized Fields
+      summary: Get all parameterized fields
       description: |-
         Returns a list of all parameterized fields including their detailed description.
       parameters:
@@ -97,11 +319,13 @@ paths:
           description: Unauthorized
   /entity/{entityType}:
     post:
+      security: []
       tags:
         - Entity Management
+      summary: Create a new record base type of entity
       description: |-
         Creates a new record based on the type of entity provided. The request body is of type `object`, and its attributes can vary depending on the fields parameterized in AML. All the attributes must be set as `string`, their conversion is done internally according to the type defined in the field parameterization.
-        
+
         Note that in addition to the essential fields, each organization can have its additional fields.
       parameters:
         - $ref: "#/components/parameters/entityTypeParam"
@@ -135,7 +359,7 @@ paths:
                     sucess: true
                     message: "entity inserted successfully!"
                     data: null
-                    errors: [ ]
+                    errors: []
                 validationError:
                   summary: Validation error
                   value:
@@ -161,15 +385,17 @@ paths:
         "401":
           description: Unauthorized
     put:
+      security: []
       tags:
         - Entity Management
+      summary: Update a record base type of entity
       description: |-
         Updates the fields of an entity indicated in the request body. There are some fields that are not updateable, such as the associated parent entity reference keys. The primary key is required only for find the register. The following fields are not updateable:
-        
+
         ### PRODUCTS
           * `identificationType`
           * `identificationNumber`
-        
+
         ### TRANSACTIONS
           * `productNumber`
 
@@ -205,7 +431,7 @@ paths:
                     sucess: true
                     message: "entity inserted successfully!"
                     data: null
-                    errors: [ ]
+                    errors: []
                 validationError:
                   summary: Validation error
                   value:
@@ -246,6 +472,133 @@ components:
           - PRODUCTS
           - TRANSACTIONS
   schemas:
+    CreateEvent:
+      type: object
+      properties:
+        managementSystem:
+          type: string
+          description: |-
+            Management system where the event will be recorded Example: ORM, ISMS, COMP
+        creatorEmail:
+          type: string
+          description: Email of the user who created the record
+        name:
+          type: string
+          description: Event Name
+          maxLength: 200
+        description:
+          type: string
+          description: Event description
+          maxLength: 2000
+        generateLosses:
+          type: boolean
+          description: If the event generates any type of loss
+        occurrenceLocation:
+          type: string
+          description: Place where the event was presented
+          maxLength: 1000
+        startDate:
+          type: string
+          description: Date the event starts
+        discoveryDate:
+          type: string
+          description: Date the event is discovered
+        dynamicFields:
+          type: array
+          description: Dynamic fields configured in events
+          items: 
+            type: object
+            properties: 
+              name:
+                type: string
+              value:
+                anyOf: 
+                  - type: string
+                  - type: number
+              options:
+                type: array
+                items: 
+                  type: object
+                  properties: 
+                    code:
+                      type: string
+                    value:
+                      type: string
+      required:
+        - managementSystem
+        - creatorEmail
+        - name
+        - description
+        - occurrenceLocation
+        - startDate
+        - discoveryDate
+    CreateEventSuccess:
+      type: object
+      properties:
+        body:
+          type: object
+          properties:
+            data:
+              type: string
+            successful:
+              type: boolean
+        status:
+          type: number
+    CreateEventError:
+      type: object
+      properties:
+        body:
+          type: object
+          properties:
+            data:
+              type: object
+              properties:
+                status:
+                  type: number
+                errorInfo:
+                  type: array
+                  items:
+                    type: object
+                    properties: 
+                      error:
+                        type: string
+                      errorCode:
+                        type: string
+                        enum: 
+                          - P001
+                          - P002
+                          - P003
+                          - P004
+                          - P005
+                          - P006
+                          - P007
+                          - P008
+                          - P009
+                          - P010
+                          - P011
+                          - P012
+                          - P013
+                          - P014
+                          - P015
+                          - P016
+                          - DF01
+                          - DF02
+                          - DF03
+                          - DF04
+                          - DF05
+                          - DF06
+                          - DF07
+                          - DF08
+                          - DF09
+                          - DF010
+                          - DF011
+                          - DF012
+                          - EVT001
+                          - EVT002
+            successful:
+              type: boolean
+        status:
+          type: number
     InternalServerError:
       type: object
       properties:
@@ -438,6 +791,65 @@ components:
         - electronicChannelValue
         - currencyType
   examples:
+    newEvent:
+      summary: "Example request"
+      value:
+        name: "Event name"
+        startDate: "2022-10-05T10:00:00"
+        description: "Event description"
+        creatorEmail: "email@pirani.co"
+        discoveryDate: "2022-10-06T10:00:00"
+        generateLosses: true
+        managementSystem: "ORM"
+        occurrenceLocation: "Event ocurrence location"
+        dynamicFields: 
+          - name: "Short text field name"
+            value: "Value of short text"
+            options: []
+          - name: "Large text field name"
+            value: "Value of large text"
+            options: []
+          - name: "Numeric field name"
+            value: 1234
+            options: []
+          - name: "Date field name"
+            value: "2024-10-05T10:00:00"
+            options: []
+          - name: "Single select field name"
+            value: ""
+            options: 
+              - value: "Options 1"
+          - name: "Single select composite field name"
+            value: ""
+            options: 
+              - code: "CO"
+          - name: "Multi select field name"
+            value: ""
+            options: 
+              - value: "Colombia"
+              - value: "Ecuador"
+          - name: "Multi select composite field name"
+            value: ""
+            options: 
+              - code: "CO"
+              - code: "EC"              
+    newEventCurl:
+      summary: "Example request CURL"
+      value: |
+        curl --location --request POST 'https://apidev.pirani.co/dev/services/events'  
+        --header 'X-PIRANI-APIKEY: ${APIKEY}'  
+        --header 'Content-Type: application/json'  
+        --data-raw ' {     
+          "managementSystem": "ORM",
+          "creatorEmail": "email@pirani.co",
+          "name": "Event name",
+          "description": "Event description",
+          "generateLosses": true,
+          "occurrenceLocation": "Event ocurrence location",
+          "startDate": "2022-10-05T10:00:00",
+          "discoveryDate": "2022-10-06T10:00:00",
+          "dynamicFields": []
+        }'
     newClient:
       summary: "New Client"
       value:
@@ -559,15 +971,15 @@ components:
               label: Tipo Identificación
               dataType: LIST
               options:
-                - code: '1'
+                - code: "1"
                   value: DNI
-                - code: '2'
+                - code: "2"
                   value: Documento de extranjeria
-                - code: '3'
+                - code: "3"
                   value: Pasaporte
-                - code: '4'
+                - code: "4"
                   value: NIT
-                - code: '5'
+                - code: "5"
                   value: RUT
             - code: identificationNumber
               label: Número de Identificación
@@ -576,9 +988,9 @@ components:
               label: Tipo Persona
               dataType: LIST
               options:
-                - code: '1'
+                - code: "1"
                   value: Natural
-                - code: '2'
+                - code: "2"
                   value: Jurídica
             - code: firstName
               label: Primer Nombre
@@ -617,11 +1029,11 @@ components:
               label: Sexo
               dataType: LIST
               options:
-                - code: '1'
+                - code: "1"
                   value: Masculino
-                - code: '2'
+                - code: "2"
                   value: Femenino
-                - code: '3'
+                - code: "3"
                   value: N/A
             - code: occupation
               label: Ocupación
@@ -633,10 +1045,10 @@ components:
               label: Politicamente Expuesto
               dataType: LIST
               options:
-                - code: '1'
+                - code: "1"
                   value: Si
-                - code: '2'
-                  value: 'No'
+                - code: "2"
+                  value: "No"
             - code: economicActivity
               label: Actividad Económica
               dataType: LIST
@@ -722,9 +1134,9 @@ components:
               label: Estado
               dataType: LIST
               options:
-                - code: '1'
+                - code: "1"
                   value: Activo
-                - code: '2'
+                - code: "2"
                   value: Inactivo
             - code: income
               label: Ingresos
@@ -750,4 +1162,4 @@ components:
             - code: annualSales
               label: Ventas Anuales
               dataType: NUMERIC
-        errors: [ ]
+        errors: []
