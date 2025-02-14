@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  version: 1.0.0
+  version: 1.1.0
   title: APIS documentation
 x-tagGroups:
   - name: Risk Management
@@ -16,15 +16,13 @@ tags:
     description: |-
       In this document, you will find all the necessary information to consume the Event Pirani API services. Remember that you must be a registered user on Pirani to access this service; if you are not, we invite you to register.
 
-      This option is only available for Pro plans and requires the necessary permissions to use this service. If you do not have these permissions, please contact your account administrator.
+      This option is only available for Enterprise plans and requires the necessary permissions to use this service. If you do not have these permissions, please contact your account administrator.
 
       This API allows for the creation of events and incidents; all successful registration actions via the API will automatically appear in your events or incidents module as appropriate. When conducting tests, remember that these records will be published directly to your account and will consume records from your plan. These can be edited or deleted from the corresponding module via the graphical interface. The service consumption is protected through basic authentication using the Access Token, which is unique to your organization, and it is your responsibility not to distribute your unique access key for the use of this service.
 
-      <h2>Bug list</h2>
+      <h2>Error list</h2>
 
-      If you have any questions about the implementation process, you can write to us through the 
-      
-      <a href="https://help.piranirisk.com/en" style="color: #32805b; text-decoration: underline">Help center</a>
+      If you have any questions about the implementation process, you can write to us through the <a href="https://help.piranirisk.com/en" style="color: #32805b; text-decoration: underline">Help center</a>
 
       <table>
         <thead>
