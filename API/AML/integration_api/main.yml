@@ -6,6 +6,7 @@ x-tagGroups:
   - name: Risk Management
     tags:
       - Event management
+      - Business entity API
   - name: AML Suite
     tags:
       - Pirani REST Integration API for AML
@@ -154,6 +155,46 @@ tags:
           </tr>
         </tbody>
       </table>
+  - name: Business entity API
+    description: |-
+      In this document, you will find all the necessary information to consume the Business entity Pirani API services. Remember that you must be a registered user on Pirani to access this service; if you are not, we invite you to register.
+
+      This option is only available for Enterprise plans and requires the necessary permissions to use this service. If you do not have these permissions, please contact your account administrator.
+
+      <h2>Error list</h2>
+
+      If you have any questions about the implementation process, you can write to us through the <a href="https://help.piranirisk.com/en" style="color: #32805b; text-decoration: underline">Help center</a>
+
+      <table>
+        <thead>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2;">
+            <th style="border:none; padding: 5px 25px 5px 0; color: #A9A9A9; font-weight:normal">CODE</th>
+            <th style="border:none; padding: 5px; color: #A9A9A9; font-weight:normal; width: 100%">REPLY MESSAGE: DESCRIPTION</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">P001</td>
+            <td style="border:none; padding: 10px;">The request is missing the X-PIRANI-APIKEY Header value</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">P002</td>
+            <td style="border:none; padding: 10px;">API Key invalid format, the correct format is PN.yyyyy.xxxxxxxxxxxx</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">P003</td>
+            <td style="border:none; padding: 10px;">Invalid API Key</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">P011</td>
+            <td style="border:none; padding: 10px;">Your plan doesn't have access to the management system</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">P016</td>
+            <td style="border:none; padding: 10px;">API Key rate limit exceeded</td>
+          </tr>
+        </tbody>
+      </table>
   - name: Pirani REST Integration API for AML
     description: |-
       AML (Anti-Money Laundering) is based on three basic entities `CLIENTS`, `COUNTERPARTIES`, `PRODUCTS` and `TRANSACTIONS`. Each entity has parameterizable fields, some are created by default. The user can create new fields, this can be done in the field parameterization section of the PiraniRisk AML module. The following endpoints allow the visualization of the parameterized fields and the administration of records in each of the entities (create, edit)
@@ -273,7 +314,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/CreateEventError"
-              example: 
+              example:
                 body:
                   data:
                     status: 400
@@ -281,7 +322,176 @@ paths:
                       - error: "Field required"
                         errorCode: "P004"
                   successful: false
-                status: 400 
+                status: 400
+  /prod/services/appclients/data-extraction/v1/resource/{entityType}:
+    get:
+      security: []
+      tags:
+        - Business entity API
+      summary: Get business entity items
+      description: |-
+        This API allows for the bulk extraction of data from all Pirani entities for use in analytics platforms such as Power BI, Qlik, or Tableau, or for any other purpose according to the client's needs.
+
+        <table>
+          <thead>
+            <tr style="border:none; border-bottom: 1px solid #C2C2C2;">
+              <th style="border:none; padding: 10px 25px 10px 0; color: #A9A9A9; font-weight:normal; width: 50vw">HEADERS</th>
+              <th style="border:none; padding: 10px; color: #A9A9A9; font-weight:normal; width: 50vw">VALUE</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+              <td style="border:none; padding: 10px 25px 10px 0;">X-PIRANI-APIKEY</td>
+              <td style="border:none; padding: 10px;">${APIKEY}</td>
+            </tr>
+          </tbody>
+        </table>
+      parameters:
+        - $ref: "#/components/parameters/riskEntityTypes"
+        - name: offset
+          in: query
+          description: The offset value for pagination. This parameter helps retrieve data starting from a specific point.
+          required: false
+          schema:
+            type: number
+            default: 0
+            example: 0
+        - name: limit
+          in: query
+          description: The maximum number of items to return in a single request.
+          schema:
+            type: number
+            default: 200
+            minimum: 1
+            maximum: 1000
+        - name: riskSystemCodes
+          in: query
+          description: |-
+            A comma-separated list of risk system codes to filter the data. Each risk system corresponds to a specific area of risk management within the organization.
+
+            By default, when riskSystemCodes is not provided, the query will return data for all risk systems. If specific risk system(s) are needed, they can be passed as a comma-separated list, e.g., riskSystemCodes=AML,COMP.
+          schema:
+            type: string
+            enum:
+              - ORM
+              - ISMS
+              - COMP
+              - AML
+              - AUD
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metadata:
+                    type: object
+                    properties:
+                      total:
+                        type: number
+                        description: The total number of entities found for the given query.
+                      returnItems:
+                        type: number
+                        description: The number of entities returned in the current request (may be less than the limit if there are fewer items).
+                      offset:
+                        type: number
+                        description: The offset value that was requested in the query.
+                        default: 0
+                      limit:
+                        type: number
+                        description: The number of items per request as per the limit query parameter.
+                        default: 200
+                      nextOffset:
+                        type: number
+                        description: If there are more items available, this field will contain the offset for the next set of results. If null, there are no more items to return.
+                  items:
+                    type: array
+                    description: An array of the requested business entities (the content of the array will depend on the specific ENTITY queried).
+              example:
+                metadata:
+                  total: 1800
+                  returnItems: 200
+                  offset: 0
+                  limit: 200
+                  nextOffset: 200
+                items: []
+        "403":
+          x-summary: Forbidden
+          description: If the API key is invalid, the response will be
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                  errors:
+                    type: array
+                    items:
+                      properties:
+                        code:
+                          type: string
+                          enum:
+                            - P001
+                            - P002
+                            - P003
+                            - P0011
+                            - P0016
+                        message:
+                          type: string
+                        field:
+                          type: string
+                example:
+                  status: 403
+                  errors:
+                    - code: P001
+                      message: Invalid API Key
+                      field: ""
+        "422":
+          x-summary: Unprocessable Entity
+          description: If the ENTITY specified in the request is not available or cannot be processed, the response will look like this
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  path:
+                    type: string
+                  time:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example: 
+                path: /v1/resource/YYYY
+                time: 2025-03-07T15:53:53.942981011Z
+                code: BAD_REQUEST
+                message: The resource EVENTS4 is not found to extract data
+        "500":
+          x-summary: Internal server error
+          description: If there is an issue with processing the request on the server side, the response will look like this
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  path:
+                    type: string
+                  time:
+                    type: string
+                  code:
+                    type: string
+                    default: ERROR_INTERNAL
+                  message:
+                    type: string
+              example: 
+                path: /v1/resource/YYYY
+                time: 2025-03-07T15:53:53.942981011Z
+                code: ERROR_INTERNAL
+                message: internal server error
   /template/{entityType}:
     get:
       security: []
@@ -469,6 +679,20 @@ components:
           - COUNTERPARTIES
           - PRODUCTS
           - TRANSACTIONS
+    riskEntityTypes:
+      name: entityType
+      description: Currently available entities
+      in: path
+      required: true
+      schema:
+        type: string
+        enum:
+          - EVENTS
+          - EVENT_LOSSES
+          - EVENT_RECOVERIES
+          - INCIDENTS
+          - INCIDENT_LOSSES
+          - INCIDENT_RECOVERIES
   schemas:
     CreateEvent:
       type: object
@@ -504,20 +728,20 @@ components:
         dynamicFields:
           type: array
           description: Dynamic fields configured in events
-          items: 
+          items:
             type: object
-            properties: 
+            properties:
               name:
                 type: string
               value:
-                anyOf: 
+                anyOf:
                   - type: string
                   - type: number
               options:
                 type: array
-                items: 
+                items:
                   type: object
-                  properties: 
+                  properties:
                     code:
                       type: string
                     value:
@@ -557,12 +781,12 @@ components:
                   type: array
                   items:
                     type: object
-                    properties: 
+                    properties:
                       error:
                         type: string
                       errorCode:
                         type: string
-                        enum: 
+                        enum:
                           - P001
                           - P002
                           - P003
@@ -800,7 +1024,7 @@ components:
         generateLosses: true
         managementSystem: "ORM"
         occurrenceLocation: "Event ocurrence location"
-        dynamicFields: 
+        dynamicFields:
           - name: "Short text field name"
             value: "Value of short text"
             options: []
@@ -815,22 +1039,22 @@ components:
             options: []
           - name: "Single select field name"
             value: ""
-            options: 
+            options:
               - value: "Options 1"
           - name: "Single select composite field name"
             value: ""
-            options: 
+            options:
               - code: "CO"
           - name: "Multi select field name"
             value: ""
-            options: 
+            options:
               - value: "Colombia"
               - value: "Ecuador"
           - name: "Multi select composite field name"
             value: ""
-            options: 
+            options:
               - code: "CO"
-              - code: "EC"              
+              - code: "EC"
     newEventCurl:
       summary: "Example request CURL"
       value: |
