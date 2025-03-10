@@ -328,7 +328,7 @@ paths:
       security: []
       tags:
         - Business entity API
-      summary: Get business entity items
+      summary: Get items
       description: |-
         This API allows for the bulk extraction of data from all Pirani entities for use in analytics platforms such as Power BI, Qlik, or Tableau, or for any other purpose according to the client's needs.
 
