@@ -693,6 +693,12 @@ components:
           - INCIDENTS
           - INCIDENT_LOSSES
           - INCIDENT_RECOVERIES
+          - RISKS
+          - CONTROLS
+          - PROCESSES
+          - THREATS_VULNERABILITIES
+          - GENERATOR_FACTOR
+          - ASSETS
   schemas:
     CreateEvent:
       type: object
