@@ -98,6 +98,10 @@ tags:
             <td style="border:none; padding: 10px;">API Key rate limit exceeded</td>
           </tr>
           <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">P017</td>
+            <td style="border:none; padding: 10px;">Invalid permissions to access the requested resource</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
             <td style="border:none; padding: 10px 25px 10px 0;">DF01</td>
             <td style="border:none; padding: 10px;">Dynamic field required</td>
           </tr>
@@ -192,6 +196,10 @@ tags:
           <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
             <td style="border:none; padding: 10px 25px 10px 0;">P016</td>
             <td style="border:none; padding: 10px;">API Key rate limit exceeded</td>
+          </tr>
+           <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">P017</td>
+            <td style="border:none; padding: 10px;">Invalid permissions to access the requested resource</td>
           </tr>
         </tbody>
       </table>
@@ -699,6 +707,16 @@ components:
           - THREATS_VULNERABILITIES
           - GENERATOR_FACTOR
           - ASSETS
+          - ACTION_PLANS
+          - REMEDIATION_PLANS
+          - RULES
+          # - AUDIT_PROGRAMS
+          # - AUDIT_PLANS
+          # - GOALS
+          # - INDICATORS
+          # - EVALUATION_PLANS
+          # - EVALUATIONS
+          # - SUSPICIOUS_TRANSACTIONS
   schemas:
     CreateEvent:
       type: object
@@ -809,6 +827,7 @@ components:
                           - P014
                           - P015
                           - P016
+                          - P017
                           - DF01
                           - DF02
                           - DF03
