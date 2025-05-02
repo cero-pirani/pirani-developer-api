@@ -710,13 +710,13 @@ components:
           - ACTION_PLANS
           - REMEDIATION_PLANS
           - RULES
-          # - AUDIT_PROGRAMS
-          # - AUDIT_PLANS
-          # - GOALS
-          # - INDICATORS
-          # - EVALUATION_PLANS
-          # - EVALUATIONS
-          # - SUSPICIOUS_TRANSACTIONS
+          - AUDIT_PROGRAMS
+          - AUDIT_PLANS
+          - GOALS
+          - INDICATORS
+          - EVALUATION_PLANS
+          - EVALUATIONS
+          - ALERTS
   schemas:
     CreateEvent:
       type: object
