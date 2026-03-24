@@ -386,6 +386,23 @@ paths:
               - COMP
               - AML
               - AUD
+        - name: timezone
+          in: query
+          required: false
+          description: |-
+            Controls the timezone used to format date fields in the response.
+
+            | Value | Behavior |
+            |-------|----------|
+            | `org` | Date fields are returned using the **organization's configured timezone**. |
+            | *(any other value or not provided)* | Date fields are returned in **UTC** (default behavior). |
+
+            **Example:** `?timezone=org`
+          schema:
+            type: string
+            enum:
+              - org
+            example: org
       responses:
         "200":
           description: Successful Response
