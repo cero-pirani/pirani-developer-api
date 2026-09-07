@@ -766,6 +766,9 @@ components:
         discoveryDate:
           type: string
           description: Date the event is discovered
+        registrationDate:
+          type: string
+          description: Optional date when the event is registered. It must be before the start and discovery dates.
         dynamicFields:
           type: array
           description: Dynamic fields configured in events
@@ -1063,6 +1066,7 @@ components:
         description: "Event description"
         creatorEmail: "email@pirani.co"
         discoveryDate: "2022-10-06T10:00:00"
+        registrationDate: "2022-10-04T10:00:00"
         generateLosses: true
         managementSystem: "ORM"
         occurrenceLocation: "Event ocurrence location"
@@ -1112,6 +1116,7 @@ components:
           "occurrenceLocation": "Event ocurrence location",
           "startDate": "2022-10-05T10:00:00",
           "discoveryDate": "2022-10-06T10:00:00",
+          "registrationDate": "2022-10-04T10:00:00",
           "dynamicFields": []
         }'
     newClient:
