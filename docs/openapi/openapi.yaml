@@ -1,0 +1,1439 @@
+openapi: 3.0.0
+info:
+  version: 1.1.0
+  title: APIS documentation
+x-tagGroups:
+  - name: Risk Management
+    tags:
+      - Event management
+      - Business entity API
+  - name: AML Suite
+    tags:
+      - Pirani REST Integration API for AML
+      - Parametrized Fields
+      - Entity Management
+tags:
+  - name: Event management
+    description: |-
+      In this document, you will find all the necessary information to consume the Event Pirani API services. Remember that you must be a registered user on Pirani to access this service; if you are not, we invite you to register.
+
+      This option is only available for Enterprise plans and requires the necessary permissions to use this service. If you do not have these permissions, please contact your account administrator.
+
+      This API allows for the creation of events and incidents; all successful registration actions via the API will automatically appear in your events or incidents module as appropriate. When conducting tests, remember that these records will be published directly to your account and will consume records from your plan. These can be edited or deleted from the corresponding module via the graphical interface. The service consumption is protected through basic authentication using the Access Token, which is unique to your organization, and it is your responsibility not to distribute your unique access key for the use of this service.
+
+      <h2>Error list</h2>
+
+      If you have any questions about the implementation process, you can write to us through the <a href="https://help.piranirisk.com/en" style="color: #32805b; text-decoration: underline">Help center</a>
+
+      <table>
+        <thead>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2;">
+            <th style="border:none; padding: 5px 25px 5px 0; color: #A9A9A9; font-weight:normal">CODE</th>
+            <th style="border:none; padding: 5px; color: #A9A9A9; font-weight:normal; width: 100%">REPLY MESSAGE: DESCRIPTION</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">P001</td>
+            <td style="border:none; padding: 10px;">The request is missing the X-PIRANI-APIKEY Header value</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">P002</td>
+            <td style="border:none; padding: 10px;">API Key invalid format, the correct format is PN.yyyyy.xxxxxxxxxxxx</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">P003</td>
+            <td style="border:none; padding: 10px;">Invalid API Key</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">P004</td>
+            <td style="border:none; padding: 10px;">Field required</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">P005</td>
+            <td style="border:none; padding: 10px;">Max length is $(max) characters</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">P006</td>
+            <td style="border:none; padding: 10px;">Min length is $(min) characters</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">P007</td>
+            <td style="border:none; padding: 10px;">Max value is $(max)</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">P008</td>
+            <td style="border:none; padding: 10px;">Min value is $(min)</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">P009</td>
+            <td style="border:none; padding: 10px;">Invalid date time format, the valid format is yyyy-MM-ddTHH:mm:ss. Example: 2022-10-05T10:00:00</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">P010</td>
+            <td style="border:none; padding: 10px;">Incorrect management system, the valid modules are ORM, ISMS, AML, COMP</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">P011</td>
+            <td style="border:none; padding: 10px;">Your plan doesn't have access to the management system</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">P012</td>
+            <td style="border:none; padding: 10px;">Resource is not associated with the management system</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">P013</td>
+            <td style="border:none; padding: 10px;">Invalid email format</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">P014</td>
+            <td style="border:none; padding: 10px;">Invalid value, the valid values are true or false</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">P015</td>
+            <td style="border:none; padding: 10px;">User not found in organization</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">P016</td>
+            <td style="border:none; padding: 10px;">API Key rate limit exceeded</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">P017</td>
+            <td style="border:none; padding: 10px;">Invalid permissions to access the requested resource</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">DF01</td>
+            <td style="border:none; padding: 10px;">Dynamic field required</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">DF02</td>
+            <td style="border:none; padding: 10px;">Dynamic field not found</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">DF03</td>
+            <td style="border:none; padding: 10px;">Dynamic field value required</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">DF04</td>
+            <td style="border:none; padding: 10px;">Dynamic field max length reached</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">DF05</td>
+            <td style="border:none; padding: 10px;">Dynamic field numeric value invalid</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">DF06</td>
+            <td style="border:none; padding: 10px;">Dynamic field date format invalid. Valid yyyy-MM-ddTHH:mm:ss</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">DF07</td>
+            <td style="border:none; padding: 10px;">Dynamic field options list required</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">DF08</td>
+            <td style="border:none; padding: 10px;">Dynamic field options list value required</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">DF09</td>
+            <td style="border:none; padding: 10px;">Dynamic field options list value not found</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">DF010</td>
+            <td style="border:none; padding: 10px;">Max length reach for dynamic field options list value</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">DF011</td>
+            <td style="border:none; padding: 10px;">Dynamic field options list code required</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">DF012</td>
+            <td style="border:none; padding: 10px;">Dynamic field options list code not found</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">EVT001</td>
+            <td style="border:none; padding: 10px;">Invalid date, the date cannot be greater than today</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">EVT002</td>
+            <td style="border:none; padding: 10px;">Invalid date, the start date cannot be greater than the discovery date</td>
+          </tr>
+        </tbody>
+      </table>
+  - name: Business entity API
+    description: |-
+      In this document, you will find all the necessary information to consume the Business entity Pirani API services. Remember that you must be a registered user on Pirani to access this service; if you are not, we invite you to register.
+
+      This option is only available for Enterprise plans and requires the necessary permissions to use this service. If you do not have these permissions, please contact your account administrator.
+
+      <h2>Error list</h2>
+
+      If you have any questions about the implementation process, you can write to us through the <a href="https://help.piranirisk.com/en" style="color: #32805b; text-decoration: underline">Help center</a>
+
+      <table>
+        <thead>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2;">
+            <th style="border:none; padding: 5px 25px 5px 0; color: #A9A9A9; font-weight:normal">CODE</th>
+            <th style="border:none; padding: 5px; color: #A9A9A9; font-weight:normal; width: 100%">REPLY MESSAGE: DESCRIPTION</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">P001</td>
+            <td style="border:none; padding: 10px;">The request is missing the X-PIRANI-APIKEY Header value</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">P002</td>
+            <td style="border:none; padding: 10px;">API Key invalid format, the correct format is PN.yyyyy.xxxxxxxxxxxx</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">P003</td>
+            <td style="border:none; padding: 10px;">Invalid API Key</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">P011</td>
+            <td style="border:none; padding: 10px;">Your plan doesn't have access to the management system</td>
+          </tr>
+          <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">P016</td>
+            <td style="border:none; padding: 10px;">API Key rate limit exceeded</td>
+          </tr>
+           <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+            <td style="border:none; padding: 10px 25px 10px 0;">P017</td>
+            <td style="border:none; padding: 10px;">Invalid permissions to access the requested resource</td>
+          </tr>
+        </tbody>
+      </table>
+  - name: Pirani REST Integration API for AML
+    description: |-
+      AML (Anti-Money Laundering) is based on three basic entities `CLIENTS`, `COUNTERPARTIES`, `PRODUCTS` and `TRANSACTIONS`. Each entity has parameterizable fields, some are created by default. The user can create new fields, this can be done in the field parameterization section of the PiraniRisk AML module. The following endpoints allow the visualization of the parameterized fields and the administration of records in each of the entities (create, edit)
+
+      There are some preconfigured essential fields that are required. Depending on the type of entity, the required fields are:
+
+      ### CLIENTS
+      * `identificationType`
+      * `identificationNumber`
+      * `personType`
+      * `firstName`
+      * `firstLastName`
+      * `bomCountry`
+      * `bomCity`
+      * `sex`
+      * `economicActivity`
+      * `registrationDate`
+      * `state`
+      * `businessName`
+      * `updateAt`
+
+      ### COUNTERPARTIES
+      * `identificationType`
+      * `identificationNumber`
+      * `counterpartyType`
+      * `creationDate`
+      * `state`
+      * `firstName`
+      * `firstLastName`
+      * `businessName`
+      * `personType`
+
+      ### PRODUCTS
+      * `product`
+      * `subproduct`
+      * `productState`
+      * `productNumber`
+      * `registrationDate`
+      * `city`
+      * `branchOffice`
+      * `distributionChannel`
+      * `identificationType` *[__Client__|__Counterparty__] owner*
+      * `identificationNumber` *[__Client__|__Counterparty__] owner*
+
+      ### TRANSACTIONS
+      * `transactionCode`
+      * `productNumber` *__Product__ owner*
+      * `distributionOrReceptionChannel`
+      * `branchOffice`
+      * `city`
+      * `nature`
+      * `transactionDate`
+      * `operationValue`
+      * `cashValue`
+      * `checkValue`
+      * `electronicChannelValue`
+      * `currencyType`
+      * `country`
+      * `city`
+  - name: Parametrized Fields
+  - name: Entity Management
+paths:
+  /dev/services/events:
+    post:
+      security: []
+      tags:
+        - Event management
+      summary: Create event
+      operationId: createEvent
+      description: |-
+        With this endpoint, you can create an event in your application.
+
+        <table>
+          <thead>
+            <tr style="border:none; border-bottom: 1px solid #C2C2C2;">
+              <th style="border:none; padding: 10px 25px 10px 0; color: #A9A9A9; font-weight:normal; width: 50vw">HEADERS</th>
+              <th style="border:none; padding: 10px; color: #A9A9A9; font-weight:normal; width: 50vw">VALUE</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+              <td style="border:none; padding: 10px 25px 10px 0;">Content-Type</td>
+              <td style="border:none; padding: 10px;">application/json</td>
+            </tr>
+            <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+              <td style="border:none; padding: 10px 25px 10px 0;">X-PIRANI-APIKEY</td>
+              <td style="border:none; padding: 10px;">${APIKEY}</td>
+            </tr>
+          </tbody>
+        </table>
+      requestBody:
+        description: "Request body type `object`"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateEvent"
+            examples:
+              newEvent:
+                $ref: "#/components/examples/newEvent"
+              curlExample:
+                $ref: "#/components/examples/newEventCurl"
+      responses:
+        "201":
+          description: Request processed successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateEventSuccess"
+              example:
+                body:
+                  data: "Event created successfully"
+                  successful: true
+                status: 201
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateEventError"
+              example:
+                body:
+                  data:
+                    status: 400
+                    errorInfo:
+                      - error: "Field required"
+                        errorCode: "P004"
+                  successful: false
+                status: 400
+  /prod/services/appclients/data-extraction/v1/resource/{entityType}:
+    get:
+      security: []
+      tags:
+        - Business entity API
+      summary: Get items
+      operationId: getBusinessEntityItems
+      description: |-
+        This API allows for the bulk extraction of data from all Pirani entities for use in analytics platforms such as Power BI, Qlik, or Tableau, or for any other purpose according to the client's needs.
+
+        <table>
+          <thead>
+            <tr style="border:none; border-bottom: 1px solid #C2C2C2;">
+              <th style="border:none; padding: 10px 25px 10px 0; color: #A9A9A9; font-weight:normal; width: 50vw">HEADERS</th>
+              <th style="border:none; padding: 10px; color: #A9A9A9; font-weight:normal; width: 50vw">VALUE</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border:none; border-bottom: 1px solid #C2C2C2; background-color: transparent">
+              <td style="border:none; padding: 10px 25px 10px 0;">X-PIRANI-APIKEY</td>
+              <td style="border:none; padding: 10px;">${APIKEY}</td>
+            </tr>
+          </tbody>
+        </table>
+      parameters:
+        - $ref: "#/components/parameters/riskEntityTypes"
+        - name: offset
+          in: query
+          description: The offset value for pagination. This parameter helps retrieve data starting from a specific point.
+          required: false
+          schema:
+            type: number
+            default: 0
+            example: 0
+        - name: limit
+          in: query
+          description: The maximum number of items to return in a single request.
+          schema:
+            type: number
+            default: 200
+            minimum: 1
+            maximum: 1000
+        - name: riskSystemCodes
+          in: query
+          description: |-
+            A comma-separated list of risk system codes to filter the data. Each risk system corresponds to a specific area of risk management within the organization.
+
+            By default, when riskSystemCodes is not provided, the query will return data for all risk systems. If specific risk system(s) are needed, they can be passed as a comma-separated list, e.g., riskSystemCodes=AML,COMP.
+          schema:
+            type: string
+            enum:
+              - ORM
+              - ISMS
+              - COMP
+              - AML
+              - AUD
+        - name: timezone
+          in: query
+          required: false
+          description: |-
+            Controls the timezone used to format date fields in the response.
+
+            | Value | Behavior |
+            |-------|----------|
+            | `org` | Date fields are returned using the **organization's configured timezone**. |
+            | *(any other value or not provided)* | Date fields are returned in **UTC** (default behavior). |
+
+            **Example:** `?timezone=org`
+          schema:
+            type: string
+            enum:
+              - org
+            example: org
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metadata:
+                    type: object
+                    properties:
+                      total:
+                        type: number
+                        description: The total number of entities found for the given query.
+                      returnItems:
+                        type: number
+                        description: The number of entities returned in the current request (may be less than the limit if there are fewer items).
+                      offset:
+                        type: number
+                        description: The offset value that was requested in the query.
+                        default: 0
+                      limit:
+                        type: number
+                        description: The number of items per request as per the limit query parameter.
+                        default: 200
+                      nextOffset:
+                        type: number
+                        description: If there are more items available, this field will contain the offset for the next set of results. If null, there are no more items to return.
+                  items:
+                    type: array
+                    description: An array of the requested business entities (the content of the array will depend on the specific ENTITY queried).
+              example:
+                metadata:
+                  total: 1800
+                  returnItems: 200
+                  offset: 0
+                  limit: 200
+                  nextOffset: 200
+                items: []
+        "403":
+          x-summary: Forbidden
+          description: If the API key is invalid, the response will be
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                  errors:
+                    type: array
+                    items:
+                      properties:
+                        code:
+                          type: string
+                          enum:
+                            - P001
+                            - P002
+                            - P003
+                            - P0011
+                            - P0016
+                        message:
+                          type: string
+                        field:
+                          type: string
+                example:
+                  status: 403
+                  errors:
+                    - code: P001
+                      message: Invalid API Key
+                      field: ""
+        "422":
+          x-summary: Unprocessable Entity
+          description: If the ENTITY specified in the request is not available or cannot be processed, the response will look like this
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  path:
+                    type: string
+                  time:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+              example:
+                path: /v1/resource/YYYY
+                time: 2025-03-07T15:53:53.942981011Z
+                code: BAD_REQUEST
+                message: The resource EVENTS4 is not found to extract data
+        "500":
+          x-summary: Internal server error
+          description: If there is an issue with processing the request on the server side, the response will look like this
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  path:
+                    type: string
+                  time:
+                    type: string
+                  code:
+                    type: string
+                    default: ERROR_INTERNAL
+                  message:
+                    type: string
+              example:
+                path: /v1/resource/YYYY
+                time: 2025-03-07T15:53:53.942981011Z
+                code: ERROR_INTERNAL
+                message: internal server error
+  /template/{entityType}:
+    get:
+      security: []
+      tags:
+        - Parametrized Fields
+      summary: Get all parameterized fields
+      operationId: getParametrizedFields
+      description: |-
+        Returns a list of all parameterized fields including their detailed description.
+      parameters:
+        - $ref: "#/components/parameters/entityTypeParam"
+      responses:
+        "200":
+          description: Request processed successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+              examples:
+                parametrizedFields:
+                  $ref: "#/components/examples/parametrizedFieldsResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+              example:
+                timestamp: "2023-06-26T21:32:26.196+00:00"
+                path: "/api/rest/v1/rest-integration-api/organization/0000002079/template/CLIENTS"
+                status: 500
+                error: "Internal Server Error"
+        "401":
+          description: Unauthorized
+  /entity/{entityType}:
+    post:
+      security: []
+      tags:
+        - Entity Management
+      summary: Create a new record base type of entity
+      operationId: createEntityRecord
+      description: |-
+        Creates a new record based on the type of entity provided. The request body is of type `object`, and its attributes can vary depending on the fields parameterized in AML. All the attributes must be set as `string`, their conversion is done internally according to the type defined in the field parameterization.
+
+        Note that in addition to the essential fields, each organization can have its additional fields.
+      parameters:
+        - $ref: "#/components/parameters/entityTypeParam"
+      requestBody:
+        description: "Request body type `object`"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Client"
+            examples:
+              newClient:
+                $ref: "#/components/examples/newClient"
+              newCounterparty:
+                $ref: "#/components/examples/newCounterparty"
+              newProduct:
+                $ref: "#/components/examples/newProduct"
+              newTransaction:
+                $ref: "#/components/examples/newTransaction"
+      responses:
+        "200":
+          description: Request processed successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+              examples:
+                insertOk:
+                  summary: Successfully registered
+                  value:
+                    sucess: true
+                    message: "entity inserted successfully!"
+                    data: null
+                    errors: []
+                validationError:
+                  summary: Validation error
+                  value:
+                    sucess: false
+                    message: "validation errors occurred"
+                    data: null
+                    errors:
+                      - code: "FIELD_REQUIRED"
+                        messages:
+                          - "code: [identificationNumber], label: [Número de Identificación], type: [STRING]"
+                          - "code: [personType], label: [Tipo Persona], type: [LIST]"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+              example:
+                timestamp: "2023-06-26T21:32:26.196+00:00"
+                path: "/api/rest/v1/rest-integration-api/organization/0000002079/entity/PRODUCTS"
+                status: 500
+                error: "Internal Server Error"
+        "401":
+          description: Unauthorized
+    put:
+      security: []
+      tags:
+        - Entity Management
+      summary: Update a record base type of entity
+      operationId: updateEntityRecord
+      description: |-
+        Updates the fields of an entity indicated in the request body. There are some fields that are not updateable, such as the associated parent entity reference keys. The primary key is required only for find the register. The following fields are not updateable:
+
+        ### PRODUCTS
+          * `identificationType`
+          * `identificationNumber`
+
+        ### TRANSACTIONS
+          * `productNumber`
+
+      parameters:
+        - $ref: "#/components/parameters/entityTypeParam"
+      requestBody:
+        description: "Request body type `object`"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Client"
+            examples:
+              updateClient:
+                $ref: "#/components/examples/updateClient"
+              updateCounterparty:
+                $ref: "#/components/examples/updateCounterparty"
+              updateProduct:
+                $ref: "#/components/examples/updateProduct"
+              updateTransaction:
+                $ref: "#/components/examples/updateTransaction"
+      responses:
+        "200":
+          description: Request processed successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenericResponse"
+              examples:
+                insertOk:
+                  summary: Successfully registered
+                  value:
+                    sucess: true
+                    message: "entity inserted successfully!"
+                    data: null
+                    errors: []
+                validationError:
+                  summary: Validation error
+                  value:
+                    sucess: false
+                    message: "validation errors occurred"
+                    data: null
+                    errors:
+                      - code: "FIELD_REQUIRED"
+                        messages:
+                          - "code: [identificationNumber], label: [Número de Identificación], type: [STRING]"
+                          - "code: [personType], label: [Tipo Persona], type: [LIST]"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalServerError"
+              example:
+                timestamp: "2023-06-26T21:32:26.196+00:00"
+                path: "/api/rest/v1/rest-integration-api/organization/0000002079/entity/PRODUCTS"
+                status: 500
+                error: "Internal Server Error"
+        "401":
+          description: Unauthorized
+components:
+  parameters:
+    entityTypeParam:
+      name: entityType
+      description: |-
+        AML's entity type
+      in: path
+      required: true
+      schema:
+        type: string
+        enum:
+          - CLIENTS
+          - COUNTERPARTIES
+          - PRODUCTS
+          - TRANSACTIONS
+    riskEntityTypes:
+      name: entityType
+      description: Currently available entities
+      in: path
+      required: true
+      schema:
+        type: string
+        enum:
+          - EVENTS
+          - EVENT_LOSSES
+          - EVENT_RECOVERIES
+          - INCIDENTS
+          - INCIDENT_LOSSES
+          - INCIDENT_RECOVERIES
+          - RISKS
+          - CONTROLS
+          - PROCESSES
+          - THREATS_VULNERABILITIES
+          - GENERATOR_FACTOR
+          - ASSETS
+          - ACTION_PLANS
+          - REMEDIATION_PLANS
+          - RULES
+          - AUDIT_PROGRAMS
+          - AUDIT_PLANS
+          - GOALS
+          - INDICATORS
+          - EVALUATION_PLANS
+          - EVALUATIONS
+          - ALERTS
+  schemas:
+    CreateEvent:
+      type: object
+      properties:
+        managementSystem:
+          type: string
+          description: |-
+            Management system where the event will be recorded Example: ORM, ISMS, COMP
+        creatorEmail:
+          type: string
+          description: Email of the user who created the record
+        name:
+          type: string
+          description: Event Name
+          maxLength: 200
+        description:
+          type: string
+          description: Event description
+          maxLength: 2000
+        generateLosses:
+          type: boolean
+          description: If the event generates any type of loss
+        occurrenceLocation:
+          type: string
+          description: Place where the event was presented
+          maxLength: 1000
+        startDate:
+          type: string
+          description: Date the event starts
+        discoveryDate:
+          type: string
+          description: Date the event is discovered
+        registrationDate:
+          type: string
+          description: Optional date when the event is registered. It must be before the start and discovery dates.
+        dynamicFields:
+          type: array
+          description: Dynamic fields configured in events
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              value:
+                anyOf:
+                  - type: string
+                  - type: number
+              options:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    code:
+                      type: string
+                    value:
+                      type: string
+      required:
+        - managementSystem
+        - creatorEmail
+        - name
+        - description
+        - occurrenceLocation
+        - startDate
+        - discoveryDate
+    CreateEventSuccess:
+      type: object
+      properties:
+        body:
+          type: object
+          properties:
+            data:
+              type: string
+            successful:
+              type: boolean
+        status:
+          type: number
+    CreateEventError:
+      type: object
+      properties:
+        body:
+          type: object
+          properties:
+            data:
+              type: object
+              properties:
+                status:
+                  type: number
+                errorInfo:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      error:
+                        type: string
+                      errorCode:
+                        type: string
+                        enum:
+                          - P001
+                          - P002
+                          - P003
+                          - P004
+                          - P005
+                          - P006
+                          - P007
+                          - P008
+                          - P009
+                          - P010
+                          - P011
+                          - P012
+                          - P013
+                          - P014
+                          - P015
+                          - P016
+                          - P017
+                          - DF01
+                          - DF02
+                          - DF03
+                          - DF04
+                          - DF05
+                          - DF06
+                          - DF07
+                          - DF08
+                          - DF09
+                          - DF010
+                          - DF011
+                          - DF012
+                          - EVT001
+                          - EVT002
+            successful:
+              type: boolean
+        status:
+          type: number
+    InternalServerError:
+      type: object
+      properties:
+        timestamp:
+          type: string
+        path:
+          type: string
+        status:
+          type: number
+        error:
+          type: string
+    GenericResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          type: object
+          nullable: true
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              code:
+                type: string
+                enum:
+                  - ENTITY_NOT_ALLOWED
+                  - FIELD_REQUIRED
+                  - FIELD_LENGTH
+                  - FIELD_DATA_TYPE
+                  - ALREADY_EXISTS
+                  - DOES_NOT_EXIST
+                  - PARENT_NOT_FOUND
+              messages:
+                type: array
+                items:
+                  type: string
+    Client:
+      type: object
+      properties:
+        identificationType:
+          type: string
+        identificationNumber:
+          type: string
+        personType:
+          type: string
+        firstName:
+          type: string
+        firstLastName:
+          type: string
+        bomCountry:
+          type: string
+        bomCity:
+          type: string
+        sex:
+          type: string
+        economicActivity:
+          type: string
+        registrationDate:
+          type: string
+        state:
+          type: string
+        businessName:
+          type: string
+        updateAt:
+          type: string
+      required:
+        - identificationType
+        - identificationNumber
+        - personType
+        - firstName
+        - firstLastName
+        - bomCountry
+        - bomCity
+        - sex
+        - economicActivity
+        - registrationDate
+        - state
+        - businessName
+        - updateAt
+    Counterparty:
+      type: object
+      properties:
+        identificationType:
+          type: string
+        identificationNumber:
+          type: string
+        counterpartyType:
+          type: string
+        creationDate:
+          type: string
+        state:
+          type: string
+        firstName:
+          type: string
+        firstLastName:
+          type: string
+        businessName:
+          type: string
+        personType:
+          type: string
+      required:
+        - identificationType
+        - identificationNumber
+        - counterpartyType
+        - creationDate
+        - state
+        - firstName
+        - firstLastName
+        - businessName
+        - personType
+    Product:
+      type: object
+      properties:
+        product:
+          type: string
+        subproduct:
+          type: string
+        productState:
+          type: string
+        productNumber:
+          type: string
+        registrationDate:
+          type: string
+        city:
+          type: string
+        branchOffice:
+          type: string
+        distributionChannel:
+          type: string
+        identificationType:
+          type: string
+        identificationNumber:
+          type: string
+      required:
+        - product
+        - subproduct
+        - productState
+        - productNumber
+        - registrationDate
+        - city
+        - branchOffice
+        - distributionChannel
+        - identificationType
+        - identificationNumber
+    Transaction:
+      type: object
+      properties:
+        transactionCode:
+          type: string
+        productNumber:
+          type: string
+        distributionOrReceptionChannel:
+          type: string
+        branchOffice:
+          type: string
+        city:
+          type: string
+        country:
+          type: string
+        nature:
+          type: string
+        transactionDate:
+          type: string
+        operationValue:
+          type: string
+        cashValue:
+          type: string
+        checkValue:
+          type: string
+        electronicChannelValue:
+          type: string
+        currencyType:
+          type: string
+      required:
+        - transactionCode
+        - productNumber
+        - distributionOrReceptionChannel
+        - branchOffice
+        - city
+        - country
+        - nature
+        - transactionDate
+        - operationValue
+        - cashValue
+        - checkValue
+        - electronicChannelValue
+        - currencyType
+  examples:
+    newEvent:
+      summary: "Example request"
+      value:
+        name: "Event name"
+        startDate: "2022-10-05T10:00:00"
+        description: "Event description"
+        creatorEmail: "email@pirani.co"
+        discoveryDate: "2022-10-06T10:00:00"
+        registrationDate: "2022-10-04T10:00:00"
+        generateLosses: true
+        managementSystem: "ORM"
+        occurrenceLocation: "Event ocurrence location"
+        dynamicFields:
+          - name: "Short text field name"
+            value: "Value of short text"
+            options: []
+          - name: "Large text field name"
+            value: "Value of large text"
+            options: []
+          - name: "Numeric field name"
+            value: 1234
+            options: []
+          - name: "Date field name"
+            value: "2024-10-05T10:00:00"
+            options: []
+          - name: "Single select field name"
+            value: ""
+            options:
+              - value: "Options 1"
+          - name: "Single select composite field name"
+            value: ""
+            options:
+              - code: "CO"
+          - name: "Multi select field name"
+            value: ""
+            options:
+              - value: "Colombia"
+              - value: "Ecuador"
+          - name: "Multi select composite field name"
+            value: ""
+            options:
+              - code: "CO"
+              - code: "EC"
+    newEventCurl:
+      summary: "Example request CURL"
+      value: |
+        curl --location --request POST 'https://apidev.pirani.co/dev/services/events'
+        --header 'X-PIRANI-APIKEY: ${APIKEY}'
+        --header 'Content-Type: application/json'
+        --data-raw ' {
+          "managementSystem": "ORM",
+          "creatorEmail": "email@pirani.co",
+          "name": "Event name",
+          "description": "Event description",
+          "generateLosses": true,
+          "occurrenceLocation": "Event ocurrence location",
+          "startDate": "2022-10-05T10:00:00",
+          "discoveryDate": "2022-10-06T10:00:00",
+          "registrationDate": "2022-10-04T10:00:00",
+          "dynamicFields": []
+        }'
+    newClient:
+      summary: "New Client"
+      value:
+        identificationType: "DNI"
+        identificationNumber: "1"
+        personType: "NATURAL"
+        firstName: "Juan"
+        firstLastName: "Gonzalez"
+        bomCountry: "COL"
+        bomCity: "BOG"
+        sex: "M"
+        economicActivity: "Comercio"
+        registrationDate: "2023-06-26T14:30:31"
+        state: "ACTIVE"
+        businessName: "Papas fritas"
+        updateAt: "2023-06-30T10:39:03"
+    updateClient:
+      summary: "Update Client"
+      value:
+        identificationType: "DNI"
+        identificationNumber: "1"
+        personType: "NATURAL"
+        firstName: "Juan"
+        firstLastName: "Gonzalez"
+        bomCountry: "COL"
+        bomCity: "BOG"
+        sex: "M"
+        economicActivity: "Comercio"
+        registrationDate: "2023-06-26T14:30:31"
+        state: "ACTIVE"
+        businessName: "Papas fritas"
+    newCounterparty:
+      summary: "New Counterparty"
+      value:
+        identificationType: ""
+        identificationNumber: ""
+        counterpartyType: ""
+        creationDate: ""
+        state: ""
+        firstName: ""
+        firstLastName: ""
+        businessName: ""
+        personType: ""
+    updateCounterparty:
+      summary: "Update Counterparty"
+      value:
+        identificationType: ""
+        identificationNumber: ""
+        counterpartyType: ""
+        creationDate: ""
+        state: ""
+        firstName: ""
+        firstLastName: ""
+        businessName: ""
+        personType: ""
+    newProduct:
+      summary: "New Product"
+      value:
+        product: ""
+        subproduct: ""
+        productState: ""
+        productNumber: ""
+        registrationDate: ""
+        city: ""
+        branchOffice: ""
+        distributionChannel: ""
+        identificationType: ""
+        identificationNumber: ""
+    updateProduct:
+      summary: "Update Product"
+      value:
+        product: ""
+        subproduct: ""
+        productState: ""
+        productNumber: ""
+        registrationDate: ""
+        city: ""
+        branchOffice: ""
+        distributionChannel: ""
+    newTransaction:
+      summary: "New Transaction"
+      value:
+        transactionCode: ""
+        productNumber: ""
+        distributionOrReceptionChannel: ""
+        branchOffice: ""
+        city: ""
+        country: ""
+        nature: ""
+        transactionDate: ""
+        operationValue: ""
+        cashValue: ""
+        checkValue: ""
+        electronicChannelValue: ""
+        currencyType: ""
+    updateTransaction:
+      summary: "Update Transaction"
+      value:
+        transactionCode: ""
+        distributionOrReceptionChannel: ""
+        branchOffice: ""
+        city: ""
+        country: ""
+        nature: ""
+        transactionDate: ""
+        operationValue: ""
+        cashValue: ""
+        checkValue: ""
+        electronicChannelValue: ""
+        currencyType: ""
+    parametrizedFieldsResponse:
+      summary: "Parametrized fields"
+      value:
+        success: true
+        message: "Request processed successfully"
+        data:
+          fields:
+            - code: identificationType
+              label: Tipo Identificación
+              dataType: LIST
+              options:
+                - code: "1"
+                  value: DNI
+                - code: "2"
+                  value: Documento de extranjeria
+                - code: "3"
+                  value: Pasaporte
+                - code: "4"
+                  value: NIT
+                - code: "5"
+                  value: RUT
+            - code: identificationNumber
+              label: Número de Identificación
+              dataType: STRING
+            - code: personType
+              label: Tipo Persona
+              dataType: LIST
+              options:
+                - code: "1"
+                  value: Natural
+                - code: "2"
+                  value: Jurídica
+            - code: firstName
+              label: Primer Nombre
+              dataType: STRING
+            - code: secondName
+              label: Segundo Nombre
+              dataType: STRING
+            - code: firstLastName
+              label: Primer Apellido
+              dataType: STRING
+            - code: secondLastName
+              label: Segundo Apellido
+              dataType: STRING
+            - code: businessName
+              label: Razón Social
+              dataType: STRING
+            - code: bornDate
+              label: Fecha de Nacimiento
+              dataType: DATE
+            - code: constitutionDate
+              label: Fecha constitución empresa
+              dataType: DATE
+            - code: bornCountry
+              label: Pais Nacimiento
+              dataType: LIST
+              options:
+                - code: default
+                  value: Genérico
+            - code: bornCity
+              label: Ciudad de Nacimiento
+              dataType: LIST
+              options:
+                - code: default
+                  value: Genérico
+            - code: sex
+              label: Sexo
+              dataType: LIST
+              options:
+                - code: "1"
+                  value: Masculino
+                - code: "2"
+                  value: Femenino
+                - code: "3"
+                  value: N/A
+            - code: occupation
+              label: Ocupación
+              dataType: LIST
+              options:
+                - code: default
+                  value: Genérico
+            - code: politicallyExposed
+              label: Politicamente Expuesto
+              dataType: LIST
+              options:
+                - code: "1"
+                  value: Si
+                - code: "2"
+                  value: "No"
+            - code: economicActivity
+              label: Actividad Económica
+              dataType: LIST
+              options:
+                - code: default
+                  value: Genérico
+            - code: registrationDate
+              label: Fecha de Alta
+              dataType: DATE
+            - code: updateAt
+              label: Fecha de Actualización
+              dataType: DATE
+            - code: personalAddress
+              label: Dirección
+              dataType: STRING
+            - code: personalAddressCountry
+              label: Pais Dirección
+              dataType: LIST
+              options:
+                - code: default
+                  value: Genérico
+            - code: personalAddressCity
+              label: Ciudad Dirección
+              dataType: LIST
+              options:
+                - code: default
+                  value: Genérico
+            - code: workAddress
+              label: Dirección Laboral
+              dataType: STRING
+            - code: workAddressCountry
+              label: Pais Dirección Laboral
+              dataType: LIST
+              options:
+                - code: default
+                  value: Genérico
+            - code: workAddressCity
+              label: Ciudad Dirección Laboral
+              dataType: LIST
+              options:
+                - code: default
+                  value: Genérico
+            - code: contactPhone
+              label: Telefono de contacto
+              dataType: STRING
+            - code: contactEmail
+              label: Dirección Email
+              dataType: STRING
+            - code: businessAddress
+              label: Dirección de la empresa
+              dataType: STRING
+            - code: businessAddressCountry
+              label: País de dirección empresa
+              dataType: LIST
+              options:
+                - code: default
+                  value: Genérico
+            - code: businessAddressCity
+              label: Ciudad de dirección empresa
+              dataType: LIST
+              options:
+                - code: default
+                  value: Genérico
+            - code: businessContactPhone
+              label: Teléfono de contacto
+              dataType: STRING
+            - code: businessContactEmail
+              label: Correo electrónico
+              dataType: STRING
+            - code: bondingCenter
+              label: Canal de Vinculación
+              dataType: LIST
+              options:
+                - code: default
+                  value: Genérico
+            - code: bondingMedium
+              label: Medio de Vinculación
+              dataType: LIST
+              options:
+                - code: default
+                  value: Genérico
+            - code: state
+              label: Estado
+              dataType: LIST
+              options:
+                - code: "1"
+                  value: Activo
+                - code: "2"
+                  value: Inactivo
+            - code: income
+              label: Ingresos
+              dataType: NUMERIC
+            - code: otherIncome
+              label: Otros Ingresos.
+              dataType: NUMERIC
+            - code: totalIncome
+              label: Total Ingresos
+              dataType: NUMERIC
+            - code: passives
+              label: Pasivos
+              dataType: NUMERIC
+            - code: assets
+              label: Activos
+              dataType: NUMERIC
+            - code: accountingEquity
+              label: Patrimonio
+              dataType: NUMERIC
+            - code: monthlySales
+              label: Ventas Mensuales
+              dataType: NUMERIC
+            - code: annualSales
+              label: Ventas Anuales
+              dataType: NUMERIC
+        errors: []
