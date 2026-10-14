@@ -1,39 +1,24 @@
 # Pirani Developer API
 
-Documentation repository for Pirani integration APIs. The repository currently
-contains the AML integration contract and supporting onboarding notes; it does
-not contain a runnable backend implementation.
+Repositorio de documentación de las APIs de integración de Pirani.
 
-## Documentation
+## ¿Qué es?
 
-- [AML integration API guide](docs/integration-api.md)
-- [OpenAPI contract](API/AML/integration_api/main.yml)
+Repositorio que documenta las APIs HTTP de integración de Pirani: creación de eventos, extracción en bloque de entidades de riesgo, consulta de campos parametrizados y alta/actualización de registros AML. Es dueño del contrato OpenAPI y de su guía de integración. No contiene una implementación backend ejecutable, ni despliegue ni configuración de runtime.
 
-## API scope
+## Stack / Comandos
 
-The OpenAPI contract is version `1.1.0` and declares five HTTP operations for
-event creation, business-entity extraction, parameterized-field lookup, and
-AML entity creation/update. See the contract for request and response schemas.
+Documentación pura: no hay lenguaje, framework ni dependencias de runtime evidenciados. No hay comandos de run, test ni build en el repositorio.
 
-## Authentication
+## API
 
-The contract examples and endpoint descriptions use the `X-PIRANI-APIKEY`
-header with a placeholder value such as `${APIKEY}`. Never commit a real API
-key. The current contract does not declare a formal OpenAPI security scheme;
-consumers should follow the provider's current integration guidance.
+- Contrato: [`docs/openapi/openapi.yaml`](docs/openapi/openapi.yaml) (OpenAPI 3.0.0, versión de la API 1.1.0).
+- Base path: no declarada en el contrato (no tiene sección `servers`); ver la guía de integración.
+- Autenticación: cabecera `X-PIRANI-APIKEY` descrita en prosa y ejemplos; no declarada como esquema de seguridad de OpenAPI.
 
-## Local development
+## Documentación técnica
 
-No build, test, run, deployment, health-check, or environment configuration
-commands are evidenced in this repository. It is documentation-only and has
-no runtime dependencies.
-
-## Known limitations
-
-- No backend source, controller definitions, tests, CI workflow, or deployment
-  configuration is present, so implementation-to-documentation route coverage
-  cannot be calculated.
-- The OpenAPI contract has no declared `servers` section, so an authoritative
-  base URL cannot be inferred from this repository.
-- Authentication is described in prose and examples rather than a reusable
-  OpenAPI security scheme.
+| Documento | Descripción | Tags |
+|---|---|---|
+| [`docs/integration-api.md`](docs/integration-api.md) | Guía de integración de la API REST de Pirani para creación de eventos, extracción de entidades de riesgo, campos parametrizados y registros AML. | `integration`, `api`, `aml`, `events`, `openapi` |
+| [`docs/openapi/openapi.yaml`](docs/openapi/openapi.yaml) | Contrato HTTP canónico (OpenAPI) | `openapi` |
